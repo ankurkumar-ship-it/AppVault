@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AppVault Admin | Release & Update Manager</title>
+  <title>AppVault Admin Dashboard</title>
   <style>
     :root {
       --bg-main: #f8fafc;
@@ -13,6 +13,7 @@
       --border-color: #e2e8f0;
       --text-main: #0f172a;
       --text-muted: #64748b;
+      --danger: #ef4444;
     }
 
     * {
@@ -29,14 +30,14 @@
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
     }
 
     .header {
       padding-bottom: 20px;
       border-bottom: 1px solid var(--border-color);
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -48,21 +49,117 @@
       color: var(--primary);
     }
 
+    /* Stats Overview Cards */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+
+    .stat-card span {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .stat-card h3 {
+      font-size: 1.8rem;
+      color: var(--primary-dark);
+      margin-top: 4px;
+    }
+
     .card {
       background: var(--surface);
       border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 24px;
       margin-bottom: 25px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     }
 
     .card h2 {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       margin-bottom: 16px;
       color: var(--text-main);
     }
 
+    /* Table Styles */
+    .table-responsive {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+    }
+
+    .table-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      object-fit: cover;
+      vertical-align: middle;
+      border: 1px solid var(--border-color);
+      margin-right: 8px;
+    }
+
+    .table-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #e0f2fe;
+      color: var(--primary-dark);
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      margin-right: 6px;
+    }
+
+    .btn-edit {
+      background: #e0f2fe;
+      color: var(--primary-dark);
+    }
+
+    .btn-delete {
+      background: #fee2e2;
+      color: var(--danger);
+    }
+
+    /* Form Design */
     .form-group {
       margin-bottom: 14px;
     }
@@ -76,7 +173,7 @@
 
     .form-group input, .form-group select, .form-group textarea {
       width: 100%;
-      padding: 11px 14px;
+      padding: 10px 14px;
       border-radius: 8px;
       border: 1px solid var(--border-color);
       font-size: 0.95rem;
@@ -90,9 +187,10 @@
     .form-row {
       display: flex;
       gap: 14px;
+      flex-wrap: wrap;
     }
 
-    .btn {
+    .btn-submit {
       padding: 12px 20px;
       background: var(--primary);
       color: #fff;
@@ -101,19 +199,10 @@
       font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s;
     }
 
-    .btn:hover {
+    .btn-submit:hover {
       background: var(--primary-dark);
-    }
-
-    .btn-secondary {
-      background: #0f172a;
-    }
-
-    .btn-secondary:hover {
-      background: #334155;
     }
 
     textarea.code-output {
@@ -124,16 +213,21 @@
       padding: 16px;
       border-radius: 8px;
       border: 1px solid #334155;
-      font-size: 0.88rem;
-      min-height: 220px;
+      font-size: 0.85rem;
+      min-height: 180px;
       margin-top: 10px;
     }
 
-    .copy-banner {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-top: 10px;
+    .btn-copy {
+      background: #0f172a;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      margin-top: 12px;
     }
 
     .badge-status {
@@ -141,6 +235,7 @@
       color: #059669;
       font-weight: 600;
       display: none;
+      margin-left: 10px;
     }
   </style>
 </head>
@@ -148,83 +243,119 @@
 
   <div class="container">
     <div class="header">
-      <h1>AppVault Admin</h1>
-      <span>Build Generator</span>
+      <h1>AppVault Management</h1>
+      <span style="font-size: 0.85rem; color: var(--text-muted);">Admin Panel</span>
     </div>
 
-    <!-- Add / Update App Form -->
+    <!-- Live Counters -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span>Total Published</span>
+        <h3 id="statTotal">0</h3>
+      </div>
+      <div class="stat-card">
+        <span>Apps</span>
+        <h3 id="statApps">0</h3>
+      </div>
+      <div class="stat-card">
+        <span>Games</span>
+        <h3 id="statGames">0</h3>
+      </div>
+    </div>
+
+    <!-- Existing Apps Inventory Table -->
     <div class="card">
-      <h2>Add or Update Application</h2>
+      <h2>Published Catalog</h2>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>App Name & Icon</th>
+              <th>Category</th>
+              <th>Version</th>
+              <th>Size</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="catalogTableBody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted);">Loading live items...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Add / Edit Application Form -->
+    <div class="card" id="formCard">
+      <h2 id="formHeading">Add or Update Application</h2>
       <form id="appForm" onsubmit="handleFormSubmit(event)">
         <div class="form-row">
-          <div class="form-group" style="flex: 1;">
-            <label>App Unique ID (e.g. app_01, game_02)</label>
-            <input type="text" id="appId" placeholder="app_01" required />
+          <div class="form-group" style="flex: 1; min-width: 200px;">
+            <label>Unique ID (e.g. peer_slove, runner_game)</label>
+            <input type="text" id="appId" required />
           </div>
-          <div class="form-group" style="flex: 1;">
+          <div class="form-group" style="flex: 2; min-width: 260px;">
             <label>Application Title</label>
-            <input type="text" id="appTitle" placeholder="Devil Dash Runner" required />
+            <input type="text" id="appTitle" required />
           </div>
         </div>
 
         <div class="form-row">
-          <div class="form-group" style="flex: 1;">
+          <div class="form-group" style="flex: 1; min-width: 140px;">
             <label>Category</label>
             <select id="appCategory">
-              <option value="Game">Game</option>
               <option value="App">App</option>
+              <option value="Game">Game</option>
             </select>
           </div>
-          <div class="form-group" style="flex: 1;">
-            <label>Version Name (Display)</label>
-            <input type="text" id="appVersionName" placeholder="1.0.5" required />
+          <div class="form-group" style="flex: 1; min-width: 140px;">
+            <label>Version Name</label>
+            <input type="text" id="appVersionName" placeholder="1.0.1" required />
           </div>
-          <div class="form-group" style="flex: 1;">
-            <label>Version Code (Integer)</label>
-            <input type="number" id="appVersionCode" placeholder="3" required />
+          <div class="form-group" style="flex: 1; min-width: 140px;">
+            <label>Version Code</label>
+            <input type="number" id="appVersionCode" placeholder="1" required />
+          </div>
+          <div class="form-group" style="flex: 1; min-width: 140px;">
+            <label>Package Size</label>
+            <input type="text" id="appSize" placeholder="12MB" required />
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group" style="flex: 1;">
-            <label>Package Size</label>
-            <input type="text" id="appSize" placeholder="25 MB" required />
-          </div>
-          <div class="form-group" style="flex: 2;">
-            <label>App Icon URL</label>
-            <input type="url" id="appIcon" placeholder="https://..." required />
-          </div>
+        <div class="form-group">
+          <label>App Icon URL</label>
+          <input type="url" id="appIcon" required />
         </div>
 
         <div class="form-group">
           <label>Direct APK Download Link</label>
-          <input type="url" id="appDownloadUrl" placeholder="https://..." required />
+          <input type="url" id="appDownloadUrl" required />
         </div>
 
         <div class="form-group">
           <label>Short Description</label>
-          <textarea id="appDesc" rows="2" placeholder="App description for public store..." required></textarea>
+          <textarea id="appDesc" rows="2" required></textarea>
         </div>
 
         <div class="form-group">
           <label>Release Notes</label>
-          <input type="text" id="appNotes" placeholder="What is new in this build..." required />
+          <input type="text" id="appNotes" required />
         </div>
 
-        <button type="submit" class="btn">Add / Update In Local Queue</button>
+        <button type="submit" class="btn-submit" id="btnSubmit">Save & Update Catalog</button>
       </form>
     </div>
 
-    <!-- Output JSON Card -->
+    <!-- JSON Output Section -->
     <div class="card">
-      <h2>Updated version.json Code</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">
-        Click below to copy this JSON, then open your <code>version.json</code> file in GitHub, paste it, and commit.
+      <h2>Generated version.json</h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem;">
+        Whenever you make changes, copy this code and commit it to your GitHub <code>version.json</code> file.
       </p>
       <textarea id="jsonOutput" class="code-output" readonly></textarea>
-      
-      <div class="copy-banner">
-        <button class="btn btn-secondary" onclick="copyJson()">Copy Updated JSON</button>
+      <div>
+        <button class="btn-copy" onclick="copyJson()">Copy Updated JSON</button>
         <span class="badge-status" id="copiedText">Copied to clipboard!</span>
       </div>
     </div>
@@ -233,23 +364,89 @@
   <script>
     let memoryCatalog = [];
 
-    // Load current live version.json on page open
+    // Force fetch version.json bypassing browser cache
     async function initAdmin() {
       try {
-        const res = await fetch("./version.json?cache_bust=" + Date.now());
+        const res = await fetch("./version.json?t=" + new Date().getTime(), {
+          cache: "no-store"
+        });
         if (res.ok) {
           memoryCatalog = await res.json();
+        } else {
+          memoryCatalog = [];
         }
       } catch (e) {
         memoryCatalog = [];
       }
-      refreshOutput();
+      renderAdminView();
     }
 
-    function refreshOutput() {
+    function renderAdminView() {
+      // Update Stats
+      document.getElementById("statTotal").innerText = memoryCatalog.length;
+      document.getElementById("statApps").innerText = memoryCatalog.filter(i => i.category === "App").length;
+      document.getElementById("statGames").innerText = memoryCatalog.filter(i => i.category === "Game").length;
+
+      // Update Table
+      const tbody = document.getElementById("catalogTableBody");
+      tbody.innerHTML = "";
+
+      if (memoryCatalog.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No applications found. Add your first app below.</td></tr>';
+      } else {
+        memoryCatalog.forEach(app => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>
+              <img src="${app.icon}" class="table-icon" onerror="this.src='https://via.placeholder.com/36'" />
+              <strong>${app.title}</strong>
+            </td>
+            <td><span class="table-badge">${app.category}</span></td>
+            <td>${app.versionName}</td>
+            <td>${app.size}</td>
+            <td>
+              <button class="action-btn btn-edit" onclick="populateEdit('${app.id}')">Edit</button>
+              <button class="action-btn btn-delete" onclick="deleteApp('${app.id}')">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      // Refresh Textarea
       document.getElementById("jsonOutput").value = JSON.stringify(memoryCatalog, null, 2);
     }
 
+    // Populate form fields for editing
+    function populateEdit(id) {
+      const item = memoryCatalog.find(i => i.id === id);
+      if (!item) return;
+
+      document.getElementById("appId").value = item.id;
+      document.getElementById("appTitle").value = item.title;
+      document.getElementById("appCategory").value = item.category;
+      document.getElementById("appVersionName").value = item.versionName;
+      document.getElementById("appVersionCode").value = item.versionCode || 1;
+      document.getElementById("appSize").value = item.size;
+      document.getElementById("appIcon").value = item.icon;
+      document.getElementById("appDownloadUrl").value = item.downloadUrl;
+      document.getElementById("appDesc").value = item.desc;
+      document.getElementById("appNotes").value = item.releaseNotes || "";
+
+      document.getElementById("formHeading").innerText = "Editing: " + item.title;
+      document.getElementById("btnSubmit").innerText = "Update Application";
+      document.getElementById("formCard").scrollIntoView({ behavior: "smooth" });
+    }
+
+    // Delete item from queue
+    function deleteApp(id) {
+      if (confirm("Are you sure you want to remove this app?")) {
+        memoryCatalog = memoryCatalog.filter(i => i.id !== id);
+        renderAdminView();
+      }
+    }
+
+    // Form Submit
     function handleFormSubmit(e) {
       e.preventDefault();
 
@@ -258,7 +455,7 @@
         title: document.getElementById("appTitle").value.trim(),
         category: document.getElementById("appCategory").value,
         versionName: document.getElementById("appVersionName").value.trim(),
-        versionCode: parseInt(document.getElementById("appVersionCode").value.trim(), 10),
+        versionCode: parseInt(document.getElementById("appVersionCode").value.trim(), 10) || 1,
         size: document.getElementById("appSize").value.trim(),
         desc: document.getElementById("appDesc").value.trim(),
         icon: document.getElementById("appIcon").value.trim(),
@@ -267,16 +464,21 @@
         releaseNotes: document.getElementById("appNotes").value.trim()
       };
 
-      // Check if ID already exists (update it) or append new
-      const existingIndex = memoryCatalog.findIndex(item => item.id === newEntry.id);
+      const existingIndex = memoryCatalog.findIndex(i => i.id === newEntry.id);
       if (existingIndex !== -1) {
         memoryCatalog[existingIndex] = newEntry;
       } else {
         memoryCatalog.unshift(newEntry);
       }
 
-      refreshOutput();
-      alert("App record added! Remember to copy the JSON below and commit it to GitHub.");
+      renderAdminView();
+
+      // Reset form title
+      document.getElementById("formHeading").innerText = "Add or Update Application";
+      document.getElementById("btnSubmit").innerText = "Save & Update Catalog";
+      document.getElementById("appForm").reset();
+
+      alert("Updated! Now copy the JSON from the bottom and commit it to GitHub.");
     }
 
     function copyJson() {
