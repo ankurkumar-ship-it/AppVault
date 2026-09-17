@@ -1,5 +1,18 @@
 [
   {
+    "id": "peer_slove",
+    "title": "Peer Slove",
+    "category": "App",
+    "versionName": "1.0.1",
+    "versionCode": 1,
+    "size": "12MB",
+    "desc": "Peer slove",
+    "icon": "https://ddire-peersolve.onrender.com/icon.png",
+    "downloadUrl": "https://github.com/ankurkumar-ship-it/AppVault/releases/download/1.0.1/PeerSolve.apk",
+    "forceUpdate": false,
+    "releaseNotes": "Peer slove"
+  },
+  {
     "id": "app_01",
     "title": "Devil Dash Runner",
     "category": "Game",
