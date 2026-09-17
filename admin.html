@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AppVault Admin | Release & Update Manager</title>
+  <style>
+    :root {
+      --bg-main: #f8fafc;
+      --surface: #ffffff;
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      padding: 24px 16px 80px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+
+    .card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 14px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #0f172a;
+    }
+
+    .btn-secondary:hover {
+      background: #334155;
+    }
+
+    textarea.code-output {
+      width: 100%;
+      font-family: monospace;
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      font-size: 0.88rem;
+      min-height: 220px;
+      margin-top: 10px;
+    }
+
+    .copy-banner {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .badge-status {
+      font-size: 0.85rem;
+      color: #059669;
+      font-weight: 600;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h1>AppVault Admin</h1>
+      <span>Build Generator</span>
+    </div>
+
+    <!-- Add / Update App Form -->
+    <div class="card">
+      <h2>Add or Update Application</h2>
+      <form id="appForm" onsubmit="handleFormSubmit(event)">
+        <div class="form-row">
+          <div class="form-group" style="flex: 1;">
+            <label>App Unique ID (e.g. app_01, game_02)</label>
+            <input type="text" id="appId" placeholder="app_01" required />
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Application Title</label>
+            <input type="text" id="appTitle" placeholder="Devil Dash Runner" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="flex: 1;">
+            <label>Category</label>
+            <select id="appCategory">
+              <option value="Game">Game</option>
+              <option value="App">App</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Version Name (Display)</label>
+            <input type="text" id="appVersionName" placeholder="1.0.5" required />
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Version Code (Integer)</label>
+            <input type="number" id="appVersionCode" placeholder="3" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="flex: 1;">
+            <label>Package Size</label>
+            <input type="text" id="appSize" placeholder="25 MB" required />
+          </div>
+          <div class="form-group" style="flex: 2;">
+            <label>App Icon URL</label>
+            <input type="url" id="appIcon" placeholder="https://..." required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Direct APK Download Link</label>
+          <input type="url" id="appDownloadUrl" placeholder="https://..." required />
+        </div>
+
+        <div class="form-group">
+          <label>Short Description</label>
+          <textarea id="appDesc" rows="2" placeholder="App description for public store..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Release Notes</label>
+          <input type="text" id="appNotes" placeholder="What is new in this build..." required />
+        </div>
+
+        <button type="submit" class="btn">Add / Update In Local Queue</button>
+      </form>
+    </div>
+
+    <!-- Output JSON Card -->
+    <div class="card">
+      <h2>Updated version.json Code</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">
+        Click below to copy this JSON, then open your <code>version.json</code> file in GitHub, paste it, and commit.
+      </p>
+      <textarea id="jsonOutput" class="code-output" readonly></textarea>
+      
+      <div class="copy-banner">
+        <button class="btn btn-secondary" onclick="copyJson()">Copy Updated JSON</button>
+        <span class="badge-status" id="copiedText">Copied to clipboard!</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let memoryCatalog = [];
+
+    // Load current live version.json on page open
+    async function initAdmin() {
+      try {
+        const res = await fetch("./version.json?cache_bust=" + Date.now());
+        if (res.ok) {
+          memoryCatalog = await res.json();
+        }
+      } catch (e) {
+        memoryCatalog = [];
+      }
+      refreshOutput();
+    }
+
+    function refreshOutput() {
+      document.getElementById("jsonOutput").value = JSON.stringify(memoryCatalog, null, 2);
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+
+      const newEntry = {
+        id: document.getElementById("appId").value.trim(),
+        title: document.getElementById("appTitle").value.trim(),
+        category: document.getElementById("appCategory").value,
+        versionName: document.getElementById("appVersionName").value.trim(),
+        versionCode: parseInt(document.getElementById("appVersionCode").value.trim(), 10),
+        size: document.getElementById("appSize").value.trim(),
+        desc: document.getElementById("appDesc").value.trim(),
+        icon: document.getElementById("appIcon").value.trim(),
+        downloadUrl: document.getElementById("appDownloadUrl").value.trim(),
+        forceUpdate: false,
+        releaseNotes: document.getElementById("appNotes").value.trim()
+      };
+
+      // Check if ID already exists (update it) or append new
+      const existingIndex = memoryCatalog.findIndex(item => item.id === newEntry.id);
+      if (existingIndex !== -1) {
+        memoryCatalog[existingIndex] = newEntry;
+      } else {
+        memoryCatalog.unshift(newEntry);
+      }
+
+      refreshOutput();
+      alert("App record added! Remember to copy the JSON below and commit it to GitHub.");
+    }
+
+    function copyJson() {
+      const textarea = document.getElementById("jsonOutput");
+      textarea.select();
+      navigator.clipboard.writeText(textarea.value);
+
+      const status = document.getElementById("copiedText");
+      status.style.display = "inline";
+      setTimeout(() => {
+        status.style.display = "none";
+      }, 2500);
+    }
+
+    window.addEventListener("DOMContentLoaded", initAdmin);
+  </script>
+</body>
+</html>
