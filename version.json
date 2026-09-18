@@ -7,7 +7,7 @@
     "versionCode": 1,
     "size": "1MB",
     "desc": "Fast, private, and secure group chat app. Create or join custom rooms with a simple room code and connect with up to 20 members without passwords or sign-ups.",
-    "icon": "https://deca-chat.onrender.com/icon.png",
+    "icon": "https://deca-chat.onrender.com/caht.png",
     "downloadUrl": "https://github.com/ankurkumar-ship-it/AppVault/releases/download/DECA_1.0.1/Deca.Chat.apk",
     "forceUpdate": false,
     "releaseNotes": "• Initial release (v1.0.1) with real-time messaging and image sharing.  • Instant room access with random 6-character room codes (no PIN/passwords needed).  • Customizable member limits per room (up to 20 members).  • Privacy Shield protection with anti-screenshot blur support.  • Quick room renaming and localized device customization."
