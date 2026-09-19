@@ -263,6 +263,125 @@
       color: var(--text-muted);
       font-size: 0.85rem;
     }
+
+    /* Windows / Desktop Default: Bottom Nav Hide */
+.mobile-bottom-nav {
+  display: none;
+}
+
+/* =========================================
+   ANDROID / MOBILE PLAY STORE UI (max 768px)
+   ========================================= */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 75px; /* Space for bottom nav */
+    background: #ffffff !important;
+  }
+
+  /* Header Clean Play Store Style */
+  .brand {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  /* App Cards Container: Row / List Style */
+  .app-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    padding: 10px 16px !important;
+  }
+
+  /* Single App Item (Play Store Row) */
+  .app-card {
+    display: grid !important;
+    grid-template-columns: 64px 1fr auto !important;
+    align-items: center !important;
+    gap: 14px !important;
+    padding: 8px 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-bottom: 1px solid #f1f3f4 !important;
+    border-radius: 0 !important;
+  }
+
+  /* App Icon: Play Store Squircle */
+  .app-card img, .app-card .app-icon {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  }
+
+  /* App Title & Details */
+  .app-card h3 {
+    font-size: 0.98rem !important;
+    margin: 0 0 3px 0 !important;
+    color: #202124 !important;
+    font-weight: 600 !important;
+  }
+
+  .app-card p {
+    font-size: 0.8rem !important;
+    color: #5f6368 !important;
+    margin: 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  /* Meta: Version, Category, Size */
+  .app-card .meta, .app-card .badge {
+    font-size: 0.75rem !important;
+    color: #5f6368 !important;
+  }
+
+  /* Download Button: Minimal Play Store Pill */
+  .app-card button, .app-card .download-btn {
+    padding: 6px 14px !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    background-color: #01875f !important; /* Play Store Green */
+    color: #fff !important;
+    border-radius: 20px !important;
+    border: none !important;
+    width: auto !important;
+  }
+
+  /* Sticky Bottom Navigation Bar */
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 62px;
+    background: #ffffff;
+    border-top: 1px solid #e0e0e0;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: #5f6368;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .nav-item.active {
+    color: #0284c7; /* Brand Blue */
+    font-weight: 700;
+  }
+}
   </style>
 </head>
 <body>
@@ -375,5 +494,20 @@
 
     window.addEventListener("DOMContentLoaded", loadCatalog);
   </script>
+  <!-- Google Play Style Bottom Navigation (Only for Mobile) -->
+<nav class="mobile-bottom-nav">
+  <div class="nav-item active" onclick="filterCategory('All')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+    <span>Apps</span>
+  </div>
+  <div class="nav-item" onclick="filterCategory('Game')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+    <span>Games</span>
+  </div>
+  <div class="nav-item" onclick="document.getElementById('searchInput').focus()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    <span>Search</span>
+  </div>
+</nav>
 </body>
 </html>
